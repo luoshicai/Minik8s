@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	pb "minik8s/pkg/proto"
 	"github.com/spf13/cobra"
+	pb "minik8s/pkg/proto"
 )
 
 var (
@@ -56,7 +56,6 @@ func doApply(cmd *cobra.Command, args []string) {
 	if len(dirname) == 0 {
 		dirname = "."
 	}
-	
 
 	filenameWithoutExtention = strings.Split(arr[len(arr)-1], ".")[0]
 
@@ -109,7 +108,32 @@ func doApply(cmd *cobra.Command, args []string) {
 			return
 		}
 
-		// TODO
+		// TODO 增加创建deployment
+		deployment := &entity.Deployment{}
+		_, err = yamlParser.ParseYaml(deployment, filename)
+		if err != nil {
+			fmt.Println("parse deployment failed")
+			return
+		}
+		// 通过 rpc 连接 apiserver
+		cli := NewClient()
+		if cli == nil {
+			return
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		// 把 pod 序列化成 string 传给 apiserver
+		deploymentByte, err := json.Marshal(deployment)
+		if err != nil {
+			fmt.Println("serialize deployment error")
+			return
+		}
+		res, err := cli.ApplyDeployment(ctx, &pb.ApplyDeploymentRequest{
+			Data: deploymentByte,
+		})
+
+		fmt.Println("Create Pod, response ", res)
 
 	case "Service":
 	case "service":

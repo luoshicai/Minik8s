@@ -15,7 +15,9 @@ message HelloResponse {
 message ApplyPodRequest {
     bytes data = 1;
 }
-
+message ApplyDeploymentRequest {
+    bytes data = 1;
+}
 message DeletePodRequest {
     bytes data = 1;
 }
@@ -38,5 +40,8 @@ message RegisterNodeRequest{
 }
 
 message UpdatePodStatusRequest {
+    bytes data = 1;
+}
+message UpdateDeploymentStatusRequest {
     bytes data = 1;
 }

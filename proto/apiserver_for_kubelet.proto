@@ -11,4 +11,5 @@ service ApiServerKubeletService {
     rpc SayHello(share.HelloRequest) returns (share.HelloResponse);
     rpc RegisterNode(share.RegisterNodeRequest) returns (share.StatusResponse);
     rpc UpdatePodStatus(share.UpdatePodStatusRequest) returns (share.StatusResponse);
+    rpc UpdateDeploymentStatus(share.UpdateDeploymentStatusRequest) returns (share.StatusResponse);
 }

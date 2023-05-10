@@ -8,6 +8,7 @@ import (
 	"minik8s/entity"
 	docker "minik8s/pkg/kubelet/container/containerfunc"
 	UUID "minik8s/tools/uuid"
+	"time"
 )
 
 func CreatePod(pod *entity.Pod) ([]string, error) {
@@ -32,8 +33,10 @@ func CreatePod(pod *entity.Pod) ([]string, error) {
 	defer cli.Close()
 
 	pauseContainerMode := "container:" + pauseContainerId
-	//设定UUID
-	pod.Metadata.Uid = UUID.UUID()
+	//设定UUID,若不为空则为非简单pod
+	if pod.Metadata.Uid == "" {
+		pod.Metadata.Uid = UUID.UUID()
+	}
 
 	for _, con := range pod.Spec.Containers {
 		fmt.Printf("create common container: %s\n", con.Name)
@@ -44,8 +47,8 @@ func CreatePod(pod *entity.Pod) ([]string, error) {
 		//映射示例  Binds: []string{"/path/on/host:/path/in/container:rw"},
 		vBinds := make([]string, 0, len(con.VolumeMounts))
 		for _, m := range con.VolumeMounts {
-			PodPath := pauseName + pod.Metadata.Uid + "_" + con.Name
-			vBinds = append(vBinds, fmt.Sprintf("%v:%v", PodPath, m.MountPath))
+			PodVolumePath := pauseName + pod.Metadata.Uid + "_" + con.Name
+			vBinds = append(vBinds, fmt.Sprintf("%v:%v", PodVolumePath, m.MountPath))
 		}
 		//增加容器CPU资源限制
 		//resources := container.Resources{}
@@ -76,12 +79,12 @@ func CreatePod(pod *entity.Pod) ([]string, error) {
 			Resources:   resources,
 		}
 
-		containerName := pod.Metadata.Name + "_" + con.Name
+		containerName := pod.Metadata.Name + "-" + con.Name
 
 		body, err := cli.ContainerCreate(context.Background(), config, HostConfig, nil, nil, containerName)
 		if err != nil {
 			DeletePod(ContainerIDMap)
-			return nil, err
+			return ContainerIDMap, err
 		}
 
 		docker.StartContainer(body.ID)
@@ -102,6 +105,7 @@ func CreatePod(pod *entity.Pod) ([]string, error) {
 	pod.Status.Phase = entity.Running
 	// TODO:给Kubelet分配真正的IP
 	pod.Status.HostIp = "127.0.0.1"
+	pod.Status.StartTime = time.Now()
 
 	fmt.Printf("Create Pod success! Pod IP: %s\n", containerIP)
 	return ContainerIDMap, nil

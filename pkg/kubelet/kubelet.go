@@ -8,6 +8,7 @@ import (
 	"log"
 	"minik8s/configs"
 	"minik8s/entity"
+	"minik8s/pkg/kubelet/deployment/deploymentfunc"
 	"minik8s/pkg/kubelet/pod/podfunc"
 
 	pb "minik8s/pkg/proto"
@@ -66,6 +67,25 @@ func (kl *Kubelet) CreatePod(pod *entity.Pod) error {
 	return nil
 }
 
+func (kl *Kubelet) CreatePDeployment(deployment *entity.Deployment) error {
+	// 实际创建Pod,IP等信息在这里更新进Pod.Status中
+	ContainerIds, err := deploymentfunc.CreateDeployment(deployment)
+	if err != nil {
+		return err
+	}
+	if ContainerIds != nil {
+		return err
+	}
+	//TODO 待完成deployment的更新
+
+	// 维护ContainerRuntimeManager
+	//kubelet.containerManager.SetContainerIDsByPodName(deployment, ContainerIds)
+
+	// 更新DeploymentStatu
+	client.UpdateDeploymentStatus(kubelet.connToApiServer, deployment)
+	return nil
+}
+
 func (kl *Kubelet) DeletePod(pod *entity.Pod) error {
 	// 获取Pod中所有的ContainerId并且删除该映射
 	containerIds := kubelet.containerManager.GetContainerIDsByPodName(pod.Metadata.Name)
@@ -91,8 +111,9 @@ func (kl *Kubelet) AddPod(pod *entity.Pod) error {
 	pod.Status.Phase = entity.Running
 
 	//启动沙箱容器和pod.spec.containers中的容器
-	if _, err := podfunc.CreatePod(pod); err != nil {
+	if ContainerIDMap, err := podfunc.CreatePod(pod); err != nil {
 		pod.Status.Phase = entity.Failed
+		podfunc.DeletePod(ContainerIDMap)
 		return err
 	}
 

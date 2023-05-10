@@ -46,3 +46,25 @@ func UpdatePodStatus(c pb.ApiServerKubeletServiceClient, pod *entity.Pod) error 
 
 	return err
 }
+
+func UpdateDeploymentStatus(c pb.ApiServerKubeletServiceClient, deployment *entity.Deployment) error {
+	ctx := context.Background()
+
+	deploymentByte, err := json.Marshal(deployment)
+	if err != nil {
+		fmt.Println("parse pod error")
+		return err
+	}
+
+	updateDeploymentStatusRequest := &pb.UpdateDeploymentStatusRequest{
+		Data: deploymentByte,
+	}
+	// 调用服务端 UpdatePodStatus 并获取响应
+	reply, err := c.UpdateDeploymentStatus(ctx, updateDeploymentStatusRequest)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(reply.Status)
+
+	return err
+}

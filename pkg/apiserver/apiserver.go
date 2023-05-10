@@ -45,6 +45,17 @@ func (master *ApiServer) ApplyPod(in *pb.ApplyPodRequest) (*pb.StatusResponse, e
 	return &pb.StatusResponse{Status: 0}, err
 }
 
+func (master *ApiServer) ApplyDeployment(in *pb.ApplyDeploymentRequest) (*pb.StatusResponse, error) {
+	// 发送消息给Kubelet
+	err := client.KubeletCreateDeployment(apiServer.conn, in)
+	if err != nil {
+		log.Fatal(err)
+		return &pb.StatusResponse{Status: -1}, err
+	}
+
+	return &pb.StatusResponse{Status: 0}, err
+}
+
 func (master *ApiServer) DeletePod(in *pb.DeletePodRequest) (*pb.StatusResponse, error) {
 	// 发送消息给Kubelet
 	err := client.KubeletDeletePod(apiServer.conn, in)

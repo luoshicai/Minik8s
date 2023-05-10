@@ -17,9 +17,9 @@ spec:
         - name: volume
           mountPath: /usr/share/nginx/html/files
     - name: my-http-server
-      image: my-http-server:latest
+      image: luoshicai/my-http-server:latest
       ports:
-        - containerPort: 6800
+        - containerPort: 81
           hostPort: 6800
       volumeMounts:
         - name: volume

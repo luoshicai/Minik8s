@@ -1,5 +1,6 @@
 package entity
 
+import "time"
 
 type ReplicaSetSpec struct {
 	// Selector 是针对 Pod 的标签查询，应与副本计数匹配。
@@ -16,6 +17,7 @@ type LabelSelector struct {
 }
 
 type ReplicaSetStatus struct {
+	StartTime time.Time `json:"start_time,omitempty" yaml:"start_time,omitempty"`
 	// Replicas 是最近观测到的副本数量。
 	Replicas int32 `json:"replicas" yaml:"replicas"`
 
