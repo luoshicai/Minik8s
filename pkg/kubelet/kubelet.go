@@ -75,7 +75,7 @@ func (kl *Kubelet) CreatePod(pod *entity.Pod) error {
 	}
 
 	// 维护ContainerRuntimeManager
-	kl.AddPod(pod)
+	//kl.AddPod(pod)
 	for _, ContainerId := range ContainerIds {
 		kubelet.podManger.AddContainerToPod(ContainerId, pod)
 	}
