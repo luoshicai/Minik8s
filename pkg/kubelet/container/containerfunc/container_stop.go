@@ -28,6 +28,6 @@ func StopContainer(containerID string) {
 	if err != nil {
 		panic(err)
 	} else {
-		log.Print("container %s is stopped\n", containerID)
+		log.Printf("container %s is stopped\n", containerID)
 	}
 }

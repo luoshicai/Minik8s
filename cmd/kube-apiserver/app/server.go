@@ -48,7 +48,7 @@ func (s *server) ApplyPod(ctx context.Context, in *pb.ApplyPodRequest) (*pb.Stat
 	pod := &entity.Pod{}
 	err := json.Unmarshal(in.Data, pod)
 	if err != nil {
-		log.PrintE("pod unmarshel err %v", err)
+		log.PrintfE("pod unmarshel err %v", err)
 		return &pb.StatusResponse{Status: -1}, err
 	}
 
@@ -261,7 +261,7 @@ func (s *server) UpdatePodStatus(ctx context.Context, in *pb.UpdatePodStatusRequ
 		log.Print("Update deployment Status.Replicas", deploymentName)
 		out, err := etcdctl.Get(cli, "Deployment/"+deploymentName)
 		if err != nil {
-			log.Print("deployment %s not exist", deploymentName)
+			log.Printf("deployment %s not exist", deploymentName)
 			return nil, err
 		}
 		deployment := &entity.Deployment{}

@@ -24,7 +24,7 @@ func TestApplyDeployment(t *testing.T) {
 			wantErr: false,
 		},
 	}
-	yamlParser.ParseYaml(tests[0].args.deployment, "/home/zhaoxi/go/src/minik8s/test/nginx_deployment.yaml")
+	yamlParser.ParseYaml(tests[0].args.deployment, "/minik8s/test/nginx_deployment.yaml")
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if _, err := ApplyDeployment(tt.args.deployment); (err != nil) != tt.wantErr {

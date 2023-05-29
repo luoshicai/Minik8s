@@ -414,7 +414,7 @@ func (master *ApiServer) ApplyFunction(function *entity.Function) (*pb.StatusRes
 		// 执行命令并捕获输出
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			log.PrintE("命令执行失败：%v\n%s", err, output)
+			log.PrintfE("命令执行失败：%v\n%s", err, output)
 		}
 
 		// 打印输出结果
@@ -432,10 +432,10 @@ func (master *ApiServer) ApplyFunction(function *entity.Function) (*pb.StatusRes
 		// 执行命令
 		err = cmd.Run()
 		if err != nil {
-			log.PrintE("执行命令失败：%v", err)
+			log.PrintfE("执行命令失败：%v", err)
 		}
 
-		log.Print("镜像构建成功：%s\n", imageName)
+		log.Printf("镜像构建成功：%s\n", imageName)
 	}
 
 	// 存入etcd
