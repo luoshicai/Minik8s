@@ -46,6 +46,7 @@ build:
   stage: build
   script:
     - ls -a && pwd
+    - go env -w GOPROXY=https://goproxy.cn
     - go mod tidy
     - go mod vendor
     - ./scripts/gen_proto.sh
