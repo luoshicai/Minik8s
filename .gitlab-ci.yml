@@ -30,6 +30,11 @@
 #     - ./bin/hello
 #   tags:
 #     - test
+#缓存所有git未追踪的文件和在vendor目录下的文件
+cache:
+  untracked: true
+  paths:
+    - vendor/
 
 stages:
   - build
