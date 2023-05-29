@@ -22,9 +22,9 @@
 .vscode
 .idea
 
-/vendor/*
-go.mod
-go.sum
+#/vendor/*
+#go.mod
+#go.sum
 
 *.log
 default.etcd/*
