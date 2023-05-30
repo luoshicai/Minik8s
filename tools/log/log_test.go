@@ -9,5 +9,4 @@ func TestLOG(t *testing.T) {
 	PrintE("hello")
 	PrintS("hello")
 	PrintW("hello")
-
 }

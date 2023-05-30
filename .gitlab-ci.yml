@@ -38,7 +38,7 @@ cache:
 
 stages:
   - build
-  - test
+  - test-tools
 
 build:
   tags:
@@ -51,10 +51,17 @@ build:
     - go mod vendor
     - go build ./...
 
+test-tools:
+  tags:
+    - minik8scicd
+  stage: test-tools
+  script:
+    - go test -v ./tools/...
+
 test:
   tags:
     - minik8scicd
-  stage: test
+  stage: test-tools
   script:
     - go test -v ./...
 

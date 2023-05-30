@@ -18,12 +18,13 @@ func TestUUID1(t *testing.T) {
 	}{
 		{
 			name: "UUID",
+			want: "not null",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := UUID(); got != tt.want {
-				t.Errorf("UUID() = %v, want %v", got, tt.want)
+			if got := UUID(); got == "" {
+				t.Errorf("UUID() = %v, want %v", "", tt.want)
 			}
 		})
 	}
