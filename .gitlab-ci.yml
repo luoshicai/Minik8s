@@ -39,6 +39,7 @@ cache:
 stages:
   - build
   - test-tools
+  - test-all
 
 build:
   tags:
@@ -61,7 +62,7 @@ test-tools:
 test:
   tags:
     - minik8scicd
-  stage: test-tools
+  stage: test-all
   script:
     - go test -v ./...
 
