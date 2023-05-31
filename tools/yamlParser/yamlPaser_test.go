@@ -16,7 +16,7 @@ var yamlPath5 = "../../test/pod4_zx.yaml"
 func TestParser(t *testing.T) {
 
 	pod := &entity.Pod{}
-	b, e := ParseYaml(pod, yamlPath5)
+	b, e := ParseYaml(pod, yamlPath)
 
 	service := &entity.Service{}
 	s, _ := ParseYaml(service, yamlPath2)
