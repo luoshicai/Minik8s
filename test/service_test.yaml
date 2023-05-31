@@ -9,5 +9,6 @@ spec:
   - name: http
     port: 8080
     targetPort: 8080
+  
   type: ClusterIP
   clusterIP: "10.20.0.2"

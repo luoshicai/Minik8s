@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"minik8s/configs"
+	"minik8s/pkg/apiserver/scale"
 	"minik8s/tools/log"
 	"strings"
 
@@ -12,7 +13,6 @@ import (
 	"minik8s/tools/etcdctl"
 	"net"
 
-	"minik8s/pkg/kubelet"
 	pb "minik8s/pkg/proto"
 
 	"minik8s/pkg/apiserver"
@@ -190,6 +190,13 @@ func (s *server) GetFunction(ctx context.Context, in *pb.GetFunctionRequest) (*p
 	}
 }
 
+func (s *server) UpdateFunction(ctx context.Context, in *pb.UpdateFunctionRequest) (*pb.StatusResponse, error) {
+	// 获取FunctionName
+	functionName := string(in.FunctionName)
+
+	return apiserver.ApiServerObject().UpdateFunction(functionName)
+}
+
 func (s *server) ApplyWorkflow(ctx context.Context, in *pb.ApplyWorkflowRequest) (*pb.StatusResponse, error) {
 	// 解析Wokflow
 	workflow := &entity.Workflow{}
@@ -202,15 +209,43 @@ func (s *server) ApplyWorkflow(ctx context.Context, in *pb.ApplyWorkflowRequest)
 	return apiserver.ApiServerObject().ApplyWorkflow(workflow)
 }
 
+func (s *server) DeleteFunction(ctx context.Context, in *pb.DeleteFunctionRequest) (*pb.StatusResponse, error) {
+	// 获取FunctionName
+	functionName := string(in.FunctionName)
+
+	return apiserver.ApiServerObject().DeleteFunction(functionName)
+}
+
 // 客户端为Kubelet
-func (s *server) RegisterNode(ctx context.Context, in *pb.RegisterNodeRequest) (*pb.StatusResponse, error) {
+func (s *server) RegisterNode(ctx context.Context, in *pb.RegisterNodeRequest) (*pb.RegisterNodeResponse, error) {
 	newNode := &entity.Node{}
 	newNode.Ip = in.NodeIp
 	newNode.Name = in.NodeName
 	newNode.KubeletUrl = in.KubeletUrl
 	newNode.Status = entity.NodeLive
 	apiserver.ApiServerObject().NodeManager.RegiseterNode(newNode)
-	return &pb.StatusResponse{Status: 0}, nil
+	podsByte := getPodbyHostIP(newNode.Ip)
+	return &pb.RegisterNodeResponse{PodData: podsByte}, nil
+}
+func getPodbyHostIP(hostIP string) [][]byte {
+	//var pods []entity.Pod
+	bytes := [][]byte{}
+	response, _ := etcdctl.EtcdGetWithPrefix("Pod/")
+	for _, poddata := range response.Kvs {
+		podNew := entity.Pod{}
+		err := json.Unmarshal(poddata.Value, &podNew)
+		if err != nil {
+			log.PrintE("podNew unmarshel err")
+			return nil
+		}
+		if podNew.Status.HostIp == hostIP {
+			//pods = append(pods, podNew)
+			podByte, _ := json.Marshal(podNew)
+			bytes = append(bytes, podByte)
+		}
+	}
+
+	return bytes
 }
 
 func (s *server) UpdatePodStatus(ctx context.Context, in *pb.UpdatePodStatusRequest) (*pb.StatusResponse, error) {
@@ -311,11 +346,19 @@ func (s *server) GetJob(ctx context.Context, in *pb.GetJobRequest) (*pb.GetJobRe
 		log.PrintE("connect to etcd error")
 	}
 	out, _ := etcdctl.Get(cli, "Job/"+string(in.JobName))
-	fmt.Println(out.Kvs)
+	if in.JobName == "" {
+		out, _ = etcdctl.GetWithPrefix(cli, "Job/")
+	}
+
+	// conver []*mvccpb.KeyValue to []byte
+	var data [][]byte
+	for _, v := range out.Kvs {
+		data = append(data, v.Value)
+	}
 	if len(out.Kvs) == 0 {
 		return &pb.GetJobResponse{Data: nil}, nil
 	} else {
-		return &pb.GetJobResponse{Data: out.Kvs[0].Value}, nil
+		return &pb.GetJobResponse{Data: data}, nil
 	}
 }
 
@@ -326,15 +369,16 @@ func (s *server) DeleteService(ctx context.Context, in *pb.DeleteServiceRequest)
 	}
 	defer cli.Close()
 	out, _ := etcdctl.Get(cli, "Service/"+string(in.ServiceName))
-	fmt.Println(out.Kvs)
 	if len(out.Kvs) == 0 {
+		log.PrintE("service %s not exist", in.ServiceName)
 		return &pb.StatusResponse{Status: 0}, nil
 	}
 
-	err = kubelet.KubeProxyObject().RemoveService(in.ServiceName)
-	if err != nil {
-		log.PrintE(err)
-	}
+	return apiserver.ApiServerObject().DeleteService(in)
+	// err = kubelet.KubeProxyObject().RemoveService(in.ServiceName)
+	// if err != nil {
+	// 	log.PrintE(err)
+	// }
 	// service := &entity.Service{}
 	// for _,data := range out.Kvs {
 	// 	err := json.Unmarshal(data.Value, service)
@@ -348,7 +392,7 @@ func (s *server) DeleteService(ctx context.Context, in *pb.DeleteServiceRequest)
 	// 	}
 	// }
 
-	return &pb.StatusResponse{Status: 0}, nil
+	// return &pb.StatusResponse{Status: 0}, nil
 }
 
 func (s *server) ApplyService(ctx context.Context, in *pb.ApplyServiceRequest) (*pb.StatusResponse, error) {
@@ -416,13 +460,11 @@ func (s *server) GetDeployment(ctx context.Context, in *pb.GetDeploymentRequest)
 }
 
 func (s *server) DeleteDeployment(ctx context.Context, in *pb.DeleteDeploymentRequest) (*pb.StatusResponse, error) {
-	//TODO
 	apiserver.ApiServerObject().DeleteDeployment(in)
 	return &pb.StatusResponse{Status: 0}, nil
 }
 
 func (s *server) ApplyDeployment(ctx context.Context, in *pb.ApplyDeploymentRequest) (*pb.StatusResponse, error) {
-	//TODO 调用DeploymentController 创建deployment
 	apiserver.ApiServerObject().AddDeployment(in)
 	return &pb.StatusResponse{Status: 0}, nil
 }
@@ -545,7 +587,11 @@ func Run() {
 		log.PrintE(err)
 		return
 	}
-
+	//启动Promtheus服务
+	err = scale.StartPrometheusServer()
+	if err != nil {
+		log.PrintE("[Apiserver] Start PrometheusServer error...")
+	}
 	//启动Pod监控
 	go apiserver.ApiServerObject().BeginMonitorPod()
 	log.PrintS("Apiserver For PodMonitor Server starts running...")

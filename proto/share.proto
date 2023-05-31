@@ -39,6 +39,10 @@ message RegisterNodeRequest{
     string kubelet_url = 3;
 }
 
+message RegisterNodeResponse{
+    repeated bytes PodData = 1;
+}
+
 message UpdatePodStatusRequest {
     bytes Data = 1;
 }
@@ -145,7 +149,7 @@ message GetJobRequest {
 }
 
 message GetJobResponse {
-    bytes Data = 1;
+    repeated bytes Data = 1;
 }
 
 // function
@@ -159,6 +163,14 @@ message GetFunctionRequest {
 
 message GetFunctionResponse {
     repeated bytes Data = 1;
+}
+
+message DeleteFunctionRequest{
+    string FunctionName = 1;
+}
+
+message UpdateFunctionRequest{
+    string FunctionName = 1;
 }
 
 // Workflow

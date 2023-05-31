@@ -45,7 +45,6 @@ func CreatePod(pod *entity.Pod) ([]string, error) {
 		log.Printf("create common container: %s\n", con.Name)
 		docker.EnsureImage(con.Image)
 
-		//TODO：待明确Pod中将哪一个目录供Container挂载使用 emptydir?
 		//增加卷volume绑定
 		//映射示例  Binds: []string{"/path/on/host:/path/in/container:rw"},
 		vBinds := make([]string, 0, len(con.VolumeMounts))
@@ -63,21 +62,38 @@ func CreatePod(pod *entity.Pod) ([]string, error) {
 				}
 			}
 		}
+		resources := container.Resources{}
+		HostConfig := &container.HostConfig{}
+		if con.Resources.Limit.Cpu != "" && con.Resources.Request.Cpu != "" && con.Resources.Request.Memory != "" && con.Resources.Limit.Memory != "" {
+			//增加容器CPU资源限制
+			MemoryLimit, err := parseMemorySize(con.Resources.Limit.Memory)
+			if err != nil {
+				log.PrintE(err)
+			}
+			CPULimit, err := parseCPUSize(con.Resources.Limit.Cpu)
+			if err != nil {
+				log.PrintE(err)
+			}
 
-		//增加容器CPU资源限制
-		MemoryLimit, err := parseMemorySize(con.Resources.Limit.Memory)
-		if err != nil {
-			log.PrintE(err)
-		}
-		CPULimit, err := parseCPUSize(con.Resources.Limit.Cpu)
-		if err != nil {
-			log.PrintE(err)
-		}
-
-		// 容器的限制：128MB 的内存，相当于 134217728 字节，和 0.1 个 CPU 核
-		resources := container.Resources{
-			Memory:   int64(MemoryLimit),
-			NanoCPUs: int64(CPULimit * 1000000000), // 1000000000相当于 1 个 CPU 核,分配0.1
+			// 容器的限制：128MB 的内存，相当于 134217728 字节，和 0.1 个 CPU 核
+			resources = container.Resources{
+				Memory:   int64(MemoryLimit),
+				NanoCPUs: int64(CPULimit * 1000000000), // 1000000000相当于 1 个 CPU 核,分配0.1
+			}
+			HostConfig = &container.HostConfig{
+				PidMode:     container.PidMode(pauseContainerMode),
+				IpcMode:     container.IpcMode(pauseContainerMode),
+				NetworkMode: container.NetworkMode(pauseContainerMode),
+				Binds:       vBinds,
+				Resources:   resources,
+			}
+		} else {
+			HostConfig = &container.HostConfig{
+				PidMode:     container.PidMode(pauseContainerMode),
+				IpcMode:     container.IpcMode(pauseContainerMode),
+				NetworkMode: container.NetworkMode(pauseContainerMode),
+				Binds:       vBinds,
+			}
 		}
 
 		config := &container.Config{
@@ -85,13 +101,6 @@ func CreatePod(pod *entity.Pod) ([]string, error) {
 			Cmd:   con.Command,
 		}
 		config.Tty = true //保持容器運行
-		HostConfig := &container.HostConfig{
-			PidMode:     container.PidMode(pauseContainerMode),
-			IpcMode:     container.IpcMode(pauseContainerMode),
-			NetworkMode: container.NetworkMode(pauseContainerMode),
-			Binds:       vBinds,
-			Resources:   resources,
-		}
 
 		containerName := pod.Metadata.Name + "_" + con.Name
 

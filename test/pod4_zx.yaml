@@ -20,11 +20,11 @@ spec:
           mountPath: /usr/share/nginx/html/files
       resources:
         limits:
-          memory: 200Mi
-          cpu: 700m
+            memory: 200Mi
+            cpu: 700m
         requests:
-          memory: 200Mi
-          cpu: 700m
+            memory: 200Mi
+            cpu: 700m
   volumes: #定义一组挂载设备
     - name: volume #定义一个挂载设备的名字
       #emptyDir: {}

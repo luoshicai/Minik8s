@@ -24,8 +24,8 @@ func ApplyDeployment(deployment *entity.Deployment) ([]*entity.Pod, error) {
 		return nil, nil
 	}
 	//根据template获得template hash
-	templateHash := strconv.Itoa(int(HASH.HASH([]byte(deployment.Metadata.Name + strconv.Itoa(int(deployment.Spec.Replicas))))))
-
+	//templateHash := strconv.Itoa(int(HASH.HASH([]byte(deployment.Metadata.Name + strconv.Itoa(int(deployment.Spec.Replicas))))))
+	templateHash := strconv.Itoa(int(HASH.HASH([]byte(deployment.Metadata.Name))))
 	Pods := make(map[string]*entity.Pod, Replicas)
 	for i := 0; i < Replicas; i++ {
 		//创建replicas份Pod
@@ -130,7 +130,7 @@ func DeleteDeployment(DeploymentName string) error {
 	}
 
 	log.Print("Node删除成功后删除etcd信息")
-	//TODO: Node删除成功后删除etcd信息,借助Pod更新机制
+	//Node删除成功后删除etcd信息,借助Pod更新机制
 	for _, pod := range Pods {
 		podpath := "Pod/" + pod.Metadata.Name
 		pod.Status.Phase = entity.Succeed
@@ -154,7 +154,6 @@ func DeleteDeployment(DeploymentName string) error {
 
 // GetPodsBydeployment Pod命名：deploymentname(nginx-deployment)+templet对应HASH(9594276)+PodUID前5位
 func GetPodsBydeployment(deployment string) []entity.Pod {
-	//TODO 默认了能在etcd中查询到的pod都是可用状态，属于replica，是否需要更新？
 	PodsData, _ := etcdctl.EtcdGetWithPrefix("Pod/" + deployment)
 	var Pods []entity.Pod
 	for _, PodData := range PodsData.Kvs {
@@ -164,7 +163,9 @@ func GetPodsBydeployment(deployment string) []entity.Pod {
 			log.PrintE("GetPodsBydeployment Unmarshal Pod error")
 			return nil
 		}
-		Pods = append(Pods, pod)
+		if pod.Status.Phase == entity.Running {
+			Pods = append(Pods, pod)
+		}
 	}
 	return Pods
 }
@@ -257,7 +258,9 @@ func MonitorDeployment() error {
 				pod.Metadata = deployment.Spec.Template.Metadata
 				pod.Metadata.Uid = UUID.UUID()
 				//根据template获得template hash
-				templateHash := strconv.Itoa(int(HASH.HASH([]byte(deployment.Metadata.Name + strconv.Itoa(int(deployment.Spec.Replicas))))))
+				//templateHash := strconv.Itoa(int(HASH.HASH([]byte(deployment.Metadata.Name + strconv.Itoa(int(deployment.Spec.Replicas))))))
+				templateHash := strconv.Itoa(int(HASH.HASH([]byte(deployment.Metadata.Name))))
+
 				//组合产生Deployment pod的名字
 				pod.Metadata.Name = deployment.Metadata.Name + "-" + templateHash + "-" + pod.Metadata.Uid[:5]
 				pod.Spec = deployment.Spec.Template.Spec
