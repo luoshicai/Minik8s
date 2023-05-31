@@ -31,7 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiServerKubeletServiceClient interface {
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
-	RegisterNode(ctx context.Context, in *RegisterNodeRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	RegisterNode(ctx context.Context, in *RegisterNodeRequest, opts ...grpc.CallOption) (*RegisterNodeResponse, error)
 	UpdatePodStatus(ctx context.Context, in *UpdatePodStatusRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 }
 
@@ -52,8 +52,8 @@ func (c *apiServerKubeletServiceClient) SayHello(ctx context.Context, in *HelloR
 	return out, nil
 }
 
-func (c *apiServerKubeletServiceClient) RegisterNode(ctx context.Context, in *RegisterNodeRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	out := new(StatusResponse)
+func (c *apiServerKubeletServiceClient) RegisterNode(ctx context.Context, in *RegisterNodeRequest, opts ...grpc.CallOption) (*RegisterNodeResponse, error) {
+	out := new(RegisterNodeResponse)
 	err := c.cc.Invoke(ctx, ApiServerKubeletService_RegisterNode_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (c *apiServerKubeletServiceClient) UpdatePodStatus(ctx context.Context, in 
 // for forward compatibility
 type ApiServerKubeletServiceServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloResponse, error)
-	RegisterNode(context.Context, *RegisterNodeRequest) (*StatusResponse, error)
+	RegisterNode(context.Context, *RegisterNodeRequest) (*RegisterNodeResponse, error)
 	UpdatePodStatus(context.Context, *UpdatePodStatusRequest) (*StatusResponse, error)
 	mustEmbedUnimplementedApiServerKubeletServiceServer()
 }
@@ -87,7 +87,7 @@ type UnimplementedApiServerKubeletServiceServer struct {
 func (UnimplementedApiServerKubeletServiceServer) SayHello(context.Context, *HelloRequest) (*HelloResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
 }
-func (UnimplementedApiServerKubeletServiceServer) RegisterNode(context.Context, *RegisterNodeRequest) (*StatusResponse, error) {
+func (UnimplementedApiServerKubeletServiceServer) RegisterNode(context.Context, *RegisterNodeRequest) (*RegisterNodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterNode not implemented")
 }
 func (UnimplementedApiServerKubeletServiceServer) UpdatePodStatus(context.Context, *UpdatePodStatusRequest) (*StatusResponse, error) {

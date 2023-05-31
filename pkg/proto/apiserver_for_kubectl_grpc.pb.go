@@ -43,6 +43,8 @@ const (
 	ApiServerKubectlService_GetJob_FullMethodName           = "/apiserver_for_kubectl.ApiServerKubectlService/GetJob"
 	ApiServerKubectlService_ApplyFunction_FullMethodName    = "/apiserver_for_kubectl.ApiServerKubectlService/ApplyFunction"
 	ApiServerKubectlService_GetFunction_FullMethodName      = "/apiserver_for_kubectl.ApiServerKubectlService/GetFunction"
+	ApiServerKubectlService_DeleteFunction_FullMethodName   = "/apiserver_for_kubectl.ApiServerKubectlService/DeleteFunction"
+	ApiServerKubectlService_UpdateFunction_FullMethodName   = "/apiserver_for_kubectl.ApiServerKubectlService/UpdateFunction"
 	ApiServerKubectlService_ApplyWorkflow_FullMethodName    = "/apiserver_for_kubectl.ApiServerKubectlService/ApplyWorkflow"
 )
 
@@ -72,6 +74,8 @@ type ApiServerKubectlServiceClient interface {
 	GetJob(ctx context.Context, in *GetJobRequest, opts ...grpc.CallOption) (*GetJobResponse, error)
 	ApplyFunction(ctx context.Context, in *ApplyFunctionRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	GetFunction(ctx context.Context, in *GetFunctionRequest, opts ...grpc.CallOption) (*GetFunctionResponse, error)
+	DeleteFunction(ctx context.Context, in *DeleteFunctionRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	UpdateFunction(ctx context.Context, in *UpdateFunctionRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	ApplyWorkflow(ctx context.Context, in *ApplyWorkflowRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 }
 
@@ -281,6 +285,24 @@ func (c *apiServerKubectlServiceClient) GetFunction(ctx context.Context, in *Get
 	return out, nil
 }
 
+func (c *apiServerKubectlServiceClient) DeleteFunction(ctx context.Context, in *DeleteFunctionRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+	out := new(StatusResponse)
+	err := c.cc.Invoke(ctx, ApiServerKubectlService_DeleteFunction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiServerKubectlServiceClient) UpdateFunction(ctx context.Context, in *UpdateFunctionRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+	out := new(StatusResponse)
+	err := c.cc.Invoke(ctx, ApiServerKubectlService_UpdateFunction_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *apiServerKubectlServiceClient) ApplyWorkflow(ctx context.Context, in *ApplyWorkflowRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
 	out := new(StatusResponse)
 	err := c.cc.Invoke(ctx, ApiServerKubectlService_ApplyWorkflow_FullMethodName, in, out, opts...)
@@ -316,6 +338,8 @@ type ApiServerKubectlServiceServer interface {
 	GetJob(context.Context, *GetJobRequest) (*GetJobResponse, error)
 	ApplyFunction(context.Context, *ApplyFunctionRequest) (*StatusResponse, error)
 	GetFunction(context.Context, *GetFunctionRequest) (*GetFunctionResponse, error)
+	DeleteFunction(context.Context, *DeleteFunctionRequest) (*StatusResponse, error)
+	UpdateFunction(context.Context, *UpdateFunctionRequest) (*StatusResponse, error)
 	ApplyWorkflow(context.Context, *ApplyWorkflowRequest) (*StatusResponse, error)
 	mustEmbedUnimplementedApiServerKubectlServiceServer()
 }
@@ -389,6 +413,12 @@ func (UnimplementedApiServerKubectlServiceServer) ApplyFunction(context.Context,
 }
 func (UnimplementedApiServerKubectlServiceServer) GetFunction(context.Context, *GetFunctionRequest) (*GetFunctionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFunction not implemented")
+}
+func (UnimplementedApiServerKubectlServiceServer) DeleteFunction(context.Context, *DeleteFunctionRequest) (*StatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFunction not implemented")
+}
+func (UnimplementedApiServerKubectlServiceServer) UpdateFunction(context.Context, *UpdateFunctionRequest) (*StatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateFunction not implemented")
 }
 func (UnimplementedApiServerKubectlServiceServer) ApplyWorkflow(context.Context, *ApplyWorkflowRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApplyWorkflow not implemented")
@@ -803,6 +833,42 @@ func _ApiServerKubectlService_GetFunction_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ApiServerKubectlService_DeleteFunction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFunctionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServerKubectlServiceServer).DeleteFunction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiServerKubectlService_DeleteFunction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServerKubectlServiceServer).DeleteFunction(ctx, req.(*DeleteFunctionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApiServerKubectlService_UpdateFunction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateFunctionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServerKubectlServiceServer).UpdateFunction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiServerKubectlService_UpdateFunction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServerKubectlServiceServer).UpdateFunction(ctx, req.(*UpdateFunctionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ApiServerKubectlService_ApplyWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ApplyWorkflowRequest)
 	if err := dec(in); err != nil {
@@ -915,6 +981,14 @@ var ApiServerKubectlService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFunction",
 			Handler:    _ApiServerKubectlService_GetFunction_Handler,
+		},
+		{
+			MethodName: "DeleteFunction",
+			Handler:    _ApiServerKubectlService_DeleteFunction_Handler,
+		},
+		{
+			MethodName: "UpdateFunction",
+			Handler:    _ApiServerKubectlService_UpdateFunction_Handler,
 		},
 		{
 			MethodName: "ApplyWorkflow",

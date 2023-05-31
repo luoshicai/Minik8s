@@ -28,7 +28,7 @@ var file_proto_apiserver_for_kubectl_proto_rawDesc = []byte{
 	0x72, 0x5f, 0x66, 0x6f, 0x72, 0x5f, 0x6b, 0x75, 0x62, 0x65, 0x63, 0x74, 0x6c, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x12, 0x15, 0x61, 0x70, 0x69, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x5f, 0x66,
 	0x6f, 0x72, 0x5f, 0x6b, 0x75, 0x62, 0x65, 0x63, 0x74, 0x6c, 0x1a, 0x11, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x2f, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x32, 0x9e, 0x0c,
+	0x6f, 0x2f, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x32, 0xac, 0x0d,
 	0x0a, 0x17, 0x41, 0x70, 0x69, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x4b, 0x75, 0x62, 0x65, 0x63,
 	0x74, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x35, 0x0a, 0x08, 0x53, 0x61, 0x79,
 	0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x12, 0x13, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x48, 0x65,
@@ -122,13 +122,22 @@ var file_proto_apiserver_for_kubectl_proto_rawDesc = []byte{
 	0x6f, 0x6e, 0x12, 0x19, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x75,
 	0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e,
 	0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x43, 0x0a, 0x0d, 0x41, 0x70, 0x70,
-	0x6c, 0x79, 0x57, 0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77, 0x12, 0x1b, 0x2e, 0x73, 0x68, 0x61,
-	0x72, 0x65, 0x2e, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x57, 0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e,
-	0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x13,
-	0x5a, 0x11, 0x6d, 0x69, 0x6e, 0x69, 0x6b, 0x38, 0x73, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x45, 0x0a, 0x0e, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x1c, 0x2e, 0x73, 0x68,
+	0x61, 0x72, 0x65, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x73, 0x68, 0x61, 0x72,
+	0x65, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x45, 0x0a, 0x0e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x12, 0x1c, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x46, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x15, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x43, 0x0a, 0x0d, 0x41, 0x70, 0x70, 0x6c, 0x79,
+	0x57, 0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77, 0x12, 0x1b, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65,
+	0x2e, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x57, 0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2e, 0x53, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x13, 0x5a, 0x11,
+	0x6d, 0x69, 0x6e, 0x69, 0x6b, 0x38, 0x73, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var file_proto_apiserver_for_kubectl_proto_goTypes = []interface{}{
@@ -154,17 +163,19 @@ var file_proto_apiserver_for_kubectl_proto_goTypes = []interface{}{
 	(*GetJobRequest)(nil),                        // 19: share.GetJobRequest
 	(*ApplyFunctionRequest)(nil),                 // 20: share.ApplyFunctionRequest
 	(*GetFunctionRequest)(nil),                   // 21: share.GetFunctionRequest
-	(*ApplyWorkflowRequest)(nil),                 // 22: share.ApplyWorkflowRequest
-	(*HelloResponse)(nil),                        // 23: share.HelloResponse
-	(*StatusResponse)(nil),                       // 24: share.StatusResponse
-	(*GetPodResponse)(nil),                       // 25: share.GetPodResponse
-	(*GetDeploymentResponse)(nil),                // 26: share.GetDeploymentResponse
-	(*GetHorizontalPodAutoscalerResponse)(nil),   // 27: share.GetHorizontalPodAutoscalerResponse
-	(*GetServiceResponse)(nil),                   // 28: share.GetServiceResponse
-	(*GetNodeResponse)(nil),                      // 29: share.GetNodeResponse
-	(*GetDnsResponse)(nil),                       // 30: share.GetDnsResponse
-	(*GetJobResponse)(nil),                       // 31: share.GetJobResponse
-	(*GetFunctionResponse)(nil),                  // 32: share.GetFunctionResponse
+	(*DeleteFunctionRequest)(nil),                // 22: share.DeleteFunctionRequest
+	(*UpdateFunctionRequest)(nil),                // 23: share.UpdateFunctionRequest
+	(*ApplyWorkflowRequest)(nil),                 // 24: share.ApplyWorkflowRequest
+	(*HelloResponse)(nil),                        // 25: share.HelloResponse
+	(*StatusResponse)(nil),                       // 26: share.StatusResponse
+	(*GetPodResponse)(nil),                       // 27: share.GetPodResponse
+	(*GetDeploymentResponse)(nil),                // 28: share.GetDeploymentResponse
+	(*GetHorizontalPodAutoscalerResponse)(nil),   // 29: share.GetHorizontalPodAutoscalerResponse
+	(*GetServiceResponse)(nil),                   // 30: share.GetServiceResponse
+	(*GetNodeResponse)(nil),                      // 31: share.GetNodeResponse
+	(*GetDnsResponse)(nil),                       // 32: share.GetDnsResponse
+	(*GetJobResponse)(nil),                       // 33: share.GetJobResponse
+	(*GetFunctionResponse)(nil),                  // 34: share.GetFunctionResponse
 }
 var file_proto_apiserver_for_kubectl_proto_depIdxs = []int32{
 	0,  // 0: apiserver_for_kubectl.ApiServerKubectlService.SayHello:input_type -> share.HelloRequest
@@ -189,32 +200,36 @@ var file_proto_apiserver_for_kubectl_proto_depIdxs = []int32{
 	19, // 19: apiserver_for_kubectl.ApiServerKubectlService.GetJob:input_type -> share.GetJobRequest
 	20, // 20: apiserver_for_kubectl.ApiServerKubectlService.ApplyFunction:input_type -> share.ApplyFunctionRequest
 	21, // 21: apiserver_for_kubectl.ApiServerKubectlService.GetFunction:input_type -> share.GetFunctionRequest
-	22, // 22: apiserver_for_kubectl.ApiServerKubectlService.ApplyWorkflow:input_type -> share.ApplyWorkflowRequest
-	23, // 23: apiserver_for_kubectl.ApiServerKubectlService.SayHello:output_type -> share.HelloResponse
-	24, // 24: apiserver_for_kubectl.ApiServerKubectlService.ApplyPod:output_type -> share.StatusResponse
-	24, // 25: apiserver_for_kubectl.ApiServerKubectlService.DeletePod:output_type -> share.StatusResponse
-	25, // 26: apiserver_for_kubectl.ApiServerKubectlService.GetPod:output_type -> share.GetPodResponse
-	24, // 27: apiserver_for_kubectl.ApiServerKubectlService.ApplyDeployment:output_type -> share.StatusResponse
-	26, // 28: apiserver_for_kubectl.ApiServerKubectlService.GetDeployment:output_type -> share.GetDeploymentResponse
-	24, // 29: apiserver_for_kubectl.ApiServerKubectlService.DeleteDeployment:output_type -> share.StatusResponse
-	24, // 30: apiserver_for_kubectl.ApiServerKubectlService.ApplyHPA:output_type -> share.StatusResponse
-	27, // 31: apiserver_for_kubectl.ApiServerKubectlService.GetHPA:output_type -> share.GetHorizontalPodAutoscalerResponse
-	24, // 32: apiserver_for_kubectl.ApiServerKubectlService.UpdateHPA:output_type -> share.StatusResponse
-	24, // 33: apiserver_for_kubectl.ApiServerKubectlService.DeleteHPA:output_type -> share.StatusResponse
-	24, // 34: apiserver_for_kubectl.ApiServerKubectlService.ApplyService:output_type -> share.StatusResponse
-	28, // 35: apiserver_for_kubectl.ApiServerKubectlService.GetService:output_type -> share.GetServiceResponse
-	24, // 36: apiserver_for_kubectl.ApiServerKubectlService.DeleteService:output_type -> share.StatusResponse
-	29, // 37: apiserver_for_kubectl.ApiServerKubectlService.GetNode:output_type -> share.GetNodeResponse
-	24, // 38: apiserver_for_kubectl.ApiServerKubectlService.ApplyDns:output_type -> share.StatusResponse
-	30, // 39: apiserver_for_kubectl.ApiServerKubectlService.GetDns:output_type -> share.GetDnsResponse
-	24, // 40: apiserver_for_kubectl.ApiServerKubectlService.DeleteDns:output_type -> share.StatusResponse
-	24, // 41: apiserver_for_kubectl.ApiServerKubectlService.ApplyJob:output_type -> share.StatusResponse
-	31, // 42: apiserver_for_kubectl.ApiServerKubectlService.GetJob:output_type -> share.GetJobResponse
-	24, // 43: apiserver_for_kubectl.ApiServerKubectlService.ApplyFunction:output_type -> share.StatusResponse
-	32, // 44: apiserver_for_kubectl.ApiServerKubectlService.GetFunction:output_type -> share.GetFunctionResponse
-	24, // 45: apiserver_for_kubectl.ApiServerKubectlService.ApplyWorkflow:output_type -> share.StatusResponse
-	23, // [23:46] is the sub-list for method output_type
-	0,  // [0:23] is the sub-list for method input_type
+	22, // 22: apiserver_for_kubectl.ApiServerKubectlService.DeleteFunction:input_type -> share.DeleteFunctionRequest
+	23, // 23: apiserver_for_kubectl.ApiServerKubectlService.UpdateFunction:input_type -> share.UpdateFunctionRequest
+	24, // 24: apiserver_for_kubectl.ApiServerKubectlService.ApplyWorkflow:input_type -> share.ApplyWorkflowRequest
+	25, // 25: apiserver_for_kubectl.ApiServerKubectlService.SayHello:output_type -> share.HelloResponse
+	26, // 26: apiserver_for_kubectl.ApiServerKubectlService.ApplyPod:output_type -> share.StatusResponse
+	26, // 27: apiserver_for_kubectl.ApiServerKubectlService.DeletePod:output_type -> share.StatusResponse
+	27, // 28: apiserver_for_kubectl.ApiServerKubectlService.GetPod:output_type -> share.GetPodResponse
+	26, // 29: apiserver_for_kubectl.ApiServerKubectlService.ApplyDeployment:output_type -> share.StatusResponse
+	28, // 30: apiserver_for_kubectl.ApiServerKubectlService.GetDeployment:output_type -> share.GetDeploymentResponse
+	26, // 31: apiserver_for_kubectl.ApiServerKubectlService.DeleteDeployment:output_type -> share.StatusResponse
+	26, // 32: apiserver_for_kubectl.ApiServerKubectlService.ApplyHPA:output_type -> share.StatusResponse
+	29, // 33: apiserver_for_kubectl.ApiServerKubectlService.GetHPA:output_type -> share.GetHorizontalPodAutoscalerResponse
+	26, // 34: apiserver_for_kubectl.ApiServerKubectlService.UpdateHPA:output_type -> share.StatusResponse
+	26, // 35: apiserver_for_kubectl.ApiServerKubectlService.DeleteHPA:output_type -> share.StatusResponse
+	26, // 36: apiserver_for_kubectl.ApiServerKubectlService.ApplyService:output_type -> share.StatusResponse
+	30, // 37: apiserver_for_kubectl.ApiServerKubectlService.GetService:output_type -> share.GetServiceResponse
+	26, // 38: apiserver_for_kubectl.ApiServerKubectlService.DeleteService:output_type -> share.StatusResponse
+	31, // 39: apiserver_for_kubectl.ApiServerKubectlService.GetNode:output_type -> share.GetNodeResponse
+	26, // 40: apiserver_for_kubectl.ApiServerKubectlService.ApplyDns:output_type -> share.StatusResponse
+	32, // 41: apiserver_for_kubectl.ApiServerKubectlService.GetDns:output_type -> share.GetDnsResponse
+	26, // 42: apiserver_for_kubectl.ApiServerKubectlService.DeleteDns:output_type -> share.StatusResponse
+	26, // 43: apiserver_for_kubectl.ApiServerKubectlService.ApplyJob:output_type -> share.StatusResponse
+	33, // 44: apiserver_for_kubectl.ApiServerKubectlService.GetJob:output_type -> share.GetJobResponse
+	26, // 45: apiserver_for_kubectl.ApiServerKubectlService.ApplyFunction:output_type -> share.StatusResponse
+	34, // 46: apiserver_for_kubectl.ApiServerKubectlService.GetFunction:output_type -> share.GetFunctionResponse
+	26, // 47: apiserver_for_kubectl.ApiServerKubectlService.DeleteFunction:output_type -> share.StatusResponse
+	26, // 48: apiserver_for_kubectl.ApiServerKubectlService.UpdateFunction:output_type -> share.StatusResponse
+	26, // 49: apiserver_for_kubectl.ApiServerKubectlService.ApplyWorkflow:output_type -> share.StatusResponse
+	25, // [25:50] is the sub-list for method output_type
+	0,  // [0:25] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
