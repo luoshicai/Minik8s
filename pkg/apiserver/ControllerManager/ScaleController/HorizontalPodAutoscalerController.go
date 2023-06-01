@@ -93,6 +93,8 @@ func (AM *AutoscalerManager) StartAutoscalerMonitor(autoscaler *entity.Horizonta
 			log.PrintE("Etcd Put Deployment error")
 			return
 		}
+		HPAdata, _ := json.Marshal(autoscaler)
+		etcdctl.EtcdPut("HPA/"+autoscaler.Metadata.Name, string(HPAdata))
 	}
 }
 
