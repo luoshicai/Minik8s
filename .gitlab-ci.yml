@@ -57,7 +57,6 @@ test-tools:
     - minik8scicd
   stage: test-tools
   script:
-    - go mod vendor
     - go test -v ./tools/...
 
 test:
