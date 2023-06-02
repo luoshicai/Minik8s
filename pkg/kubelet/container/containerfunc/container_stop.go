@@ -26,7 +26,8 @@ func StopContainer(containerID string) {
 	err := cli.ContainerStop(context.Background(), containerID, stopOpts)
 
 	if err != nil {
-		panic(err)
+		//panic(err)
+		log.PrintW(err)
 	} else {
 		log.Print("container %s is stopped\n", containerID)
 	}
