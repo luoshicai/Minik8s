@@ -187,7 +187,6 @@ func (AM *AutoscalerManager) StartAutoscalerMonitor(autoscaler *entity.Horizonta
 			return
 		}
 		HPAdata, _ := json.Marshal(autoscaler)
-
 		etcdctl.EtcdPut("HPA/"+autoscaler.Metadata.Name, string(HPAdata))
 	}
 }
