@@ -2,6 +2,7 @@ package containerfunc
 
 import (
 	"context"
+	"minik8s/tools/log"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -20,8 +21,10 @@ func RemoveContainer(containerID string) (string, error) {
 	err := cli.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{})
 
 	if err != nil {
-		panic(err)
+		//panic(err)
+		log.PrintW(err)
+		return containerID, nil
 	} else {
-		return containerID, err
+		return containerID, nil
 	}
 }
