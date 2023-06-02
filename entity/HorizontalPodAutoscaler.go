@@ -14,7 +14,21 @@ type HpaSpec struct {
 	ScaleInterval  int32          `json:"scaleInterval,omitempty" yaml:"scaleInterval,omitempty"`
 	MinReplicas    int32          `json:"minReplicas" yaml:"minReplicas"`
 	MaxReplicas    int32          `json:"maxReplicas" yaml:"maxReplicas"`
+	Hehavior       behavior       `json:"behavior,omitempty" yaml:"behavior,omitempty"`
 	Metrics        []MetricSpec   `json:"metrics" yaml:"metrics"`
+}
+type behavior struct {
+	ScaleDown policys `json:"scaleDown,omitempty" yaml:"scaleDown,omitempty"`
+	ScaleUp   policys `json:"scaleUpomitempty" yaml:"scaleUp,omitempty"`
+}
+type policys struct {
+	Policy       []policy `json:"policies,omitempty" yaml:"policies,omitempty"`
+	SelectPolicy string   `json:"selectPolicy,omitempty" yaml:"selectPolicy,omitempty"`
+}
+type policy struct {
+	Type          string `json:"type" yaml:"type"`
+	Value         int32  `json:"value" yaml:"value"`
+	PeriodSeconds int32  `json:"periodSeconds" yaml:"periodSeconds"`
 }
 type ScaleTargetRef struct {
 	Kind string `json:"kind" yaml:"kind"`
