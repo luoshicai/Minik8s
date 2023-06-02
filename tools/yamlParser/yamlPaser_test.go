@@ -10,7 +10,7 @@ import (
 var yamlPath = "../../test/pod2.yaml"
 var yamlPath2 = "../../test/service_test.yaml"
 var yamlPath3 = "../../test/nginx_deployment.yaml"
-var yamlPath4 = "../../test/hpa_test.yaml"
+var yamlPath4 = "../../test/AutoScaleTest_hpa.yaml"
 var yamlPath5 = "../../test/yamls/pod_test.yaml"
 
 func TestParser(t *testing.T) {

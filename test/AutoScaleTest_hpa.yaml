@@ -15,6 +15,16 @@ spec:
         target:
           type: Utilization  #使用指标为百分比
           averageUtilization: 2 #保持所有 Pod 的平均 CPU 利用率为 50%
+  behavior:
+    scaleDown:
+      policies:
+        - type: Percent
+          value: 10
+          periodSeconds: 60
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+      selectPolicy: Min
 #    - type: Resource
 #      resource:
 #        name: memory

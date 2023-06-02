@@ -58,6 +58,97 @@ func (AM *AutoscalerManager) DeleteAutoscaler(autoscalerName string) error {
 	}
 
 }
+func (AM *AutoscalerManager) ApplyBehavior(autoscaler *entity.HorizontalPodAutoscaler, deployment *entity.Deployment) {
+	if autoscaler.Spec.Hehavior.ScaleDown.Policy == nil && autoscaler.Spec.Hehavior.ScaleUp.Policy == nil {
+		//没有执行策略
+		autoscaler.Status.LastScaleTime = time.Now()
+		return
+	}
+	//DesiredReplicas := autoscaler.Status.DesiredReplicas
+	FinalReplica := deployment.Spec.Replicas
+	NowReplica := deployment.Status.Replicas
+	lastMorereplicas := 0
+	morereplicas := 0
+	lastFewerepilcas := 0
+	fewerepilcas := 0
+	nowTime := time.Now()
+	duration := nowTime.Sub(autoscaler.Status.LastScaleTime)
+	durationSecond := int32(duration.Seconds())
+
+	if autoscaler.Spec.Hehavior.ScaleDown.Policy != nil && (NowReplica > FinalReplica) {
+		for _, oneType := range autoscaler.Spec.Hehavior.ScaleDown.Policy {
+			if durationSecond < oneType.PeriodSeconds {
+				return
+			}
+			switch oneType.Type {
+			case "Percent":
+				fewerepilcas = int(oneType.Value / 100 * NowReplica)
+
+			case "Pods":
+				fewerepilcas = int(oneType.Value)
+			}
+			//避免小于finalReplica
+			if (NowReplica - int32(fewerepilcas)) < FinalReplica {
+				fewerepilcas = int(NowReplica - FinalReplica)
+			}
+			//比较策略取最大值或最小值
+			if autoscaler.Spec.Hehavior.ScaleDown.SelectPolicy != "" {
+				switch autoscaler.Spec.Hehavior.ScaleDown.SelectPolicy {
+				case "Min", "min":
+					if fewerepilcas < lastFewerepilcas {
+						lastFewerepilcas = fewerepilcas
+					}
+				case "Max", "max":
+					if fewerepilcas > lastFewerepilcas {
+						lastFewerepilcas = fewerepilcas
+					}
+				default:
+					lastFewerepilcas = fewerepilcas
+				}
+			}
+
+		}
+		deployment.Spec.Replicas = deployment.Status.Replicas - int32(lastFewerepilcas)
+	}
+
+	if autoscaler.Spec.Hehavior.ScaleUp.Policy != nil && (NowReplica < FinalReplica) {
+		for _, oneType := range autoscaler.Spec.Hehavior.ScaleUp.Policy {
+			if durationSecond < oneType.PeriodSeconds {
+				return
+			}
+			switch oneType.Type {
+			case "Percent":
+				morereplicas = int(oneType.Value / 100 * NowReplica)
+
+			case "Pods":
+				morereplicas = int(oneType.Value)
+			}
+			//避免小于finalReplica
+			if (NowReplica + int32(morereplicas)) > FinalReplica {
+				morereplicas = int(FinalReplica - NowReplica)
+			}
+			//比较策略取最大值或最小值
+			if autoscaler.Spec.Hehavior.ScaleUp.SelectPolicy != "" {
+				switch autoscaler.Spec.Hehavior.ScaleUp.SelectPolicy {
+				case "Min", "min":
+					if morereplicas < lastMorereplicas {
+						lastMorereplicas = morereplicas
+					}
+				case "Max", "max":
+					if morereplicas > lastMorereplicas {
+						lastMorereplicas = morereplicas
+					}
+				default:
+					lastMorereplicas = morereplicas
+				}
+			}
+
+		}
+		deployment.Spec.Replicas = deployment.Status.Replicas + int32(lastMorereplicas)
+
+	}
+	autoscaler.Status.LastScaleTime = time.Now()
+}
 
 // 按照scaleInterval指定的时间间隔（默认30s）执行策略，更新状态
 func (AM *AutoscalerManager) StartAutoscalerMonitor(autoscaler *entity.HorizontalPodAutoscaler) {
@@ -85,6 +176,8 @@ func (AM *AutoscalerManager) StartAutoscalerMonitor(autoscaler *entity.Horizonta
 			return
 		}
 		AM.monitorAndScaleDeployment(autoscaler, deployment)
+		//插入扩缩速度策略
+		AM.ApplyBehavior(autoscaler, deployment)
 		//重新写入deployment
 		deploymentData, _ := json.Marshal(deployment)
 		log.Printf("[AutoscalerMonitor]Put %s :%s", deployment.Metadata.Name, string(deploymentData))
@@ -181,7 +274,7 @@ func (AM *AutoscalerManager) monitorAndScaleDeployment(autoscaler *entity.Horizo
 					log.Print(deployment.Metadata.Name + " sub replica ")
 					deployment.Spec.Replicas = newReplica - 1
 				}
-			} else if newReplica <= autoscaler.Spec.MaxReplicas && cpuUsageAvgPod < TargetCPUAvg {
+			} else if newReplica <= autoscaler.Spec.MinReplicas && cpuUsageAvgPod < TargetCPUAvg {
 				//已经低于最小运行的MInReplicas，直接返回
 				log.Printf("AUTOSCALER [%s]:Have reached MinReplicas %d",
 					autoscaler.Metadata.Name,
@@ -196,7 +289,7 @@ func (AM *AutoscalerManager) monitorAndScaleDeployment(autoscaler *entity.Horizo
 			}
 			autoscaler.Status.CurrentReplicas = deployment.Spec.Replicas
 			autoscaler.Status.DesiredReplicas = deployment.Spec.Replicas - deployment.Status.Replicas
-			autoscaler.Status.LastScaleTime = time.Now()
+			//autoscaler.Status.LastScaleTime = time.Now()
 			log.Printf("AUTOSCALER [%s]: cpu usage per pod reaches %f, deployment %s scales out to %d replicas\n",
 				autoscaler.Metadata.Name,
 				cpuUsageAvgPod,
@@ -265,7 +358,7 @@ func (AM *AutoscalerManager) monitorAndScaleDeployment(autoscaler *entity.Horizo
 			}
 			autoscaler.Status.CurrentReplicas = deployment.Spec.Replicas
 			autoscaler.Status.DesiredReplicas = deployment.Spec.Replicas - deployment.Status.Replicas
-			autoscaler.Status.LastScaleTime = time.Now()
+			//autoscaler.Status.LastScaleTime = time.Now()
 			fmt.Printf("AUTOSCALER [%s]: memory usage per pod reaches %d, deployment %s scales out to %d replicas\n",
 				autoscaler.Metadata.Name,
 				TargetMemoryAvg,
